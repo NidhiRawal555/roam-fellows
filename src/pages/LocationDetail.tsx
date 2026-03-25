@@ -73,19 +73,21 @@ export default function LocationDetail() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { icon: Users, label: "Population", value: location.population },
-                { icon: Globe, label: "Language", value: location.language },
-                { icon: Clock, label: "Timezone", value: location.timezone },
-                { icon: MapPin, label: "Currency", value: `${location.currencySymbol} ${location.currencyCode}` },
-              ].map((stat) => (
-                <div key={stat.label} className="rounded-xl border border-border bg-card p-4">
-                  <stat.icon className="h-4 w-4 text-primary mb-2" />
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
-                  <p className="text-sm font-semibold text-foreground">{stat.value}</p>
-                </div>
-              ))}
+            <div className="rounded-xl border border-border bg-card p-6">
+              <h3 className="font-semibold text-foreground mb-4">Quick Facts</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {[
+                  { label: "Population", value: location.population },
+                  { label: "Language", value: location.language },
+                  { label: "Currency", value: location.currencyCode },
+                  { label: "Timezone", value: location.timezone },
+                ].map((stat) => (
+                  <div key={stat.label}>
+                    <p className="text-sm text-muted-foreground">{stat.label}</p>
+                    <p className="text-base font-semibold text-foreground mt-0.5">{stat.value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </TabsContent>
 
@@ -154,7 +156,6 @@ export default function LocationDetail() {
           </TabsContent>
 
           <TabsContent value="videos">
-            <h2 className="font-display text-2xl font-bold text-foreground mb-4">Travel Videos</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {location.videos.map((v) => (
                 <a
@@ -165,10 +166,10 @@ export default function LocationDetail() {
                   className="group rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow"
                 >
                   <div className="relative">
-                    <img src={v.thumbnail} alt={v.title} className="w-full h-36 object-cover" loading="lazy" />
-                    <div className="absolute inset-0 flex items-center justify-center bg-foreground/0 group-hover:bg-foreground/20 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-card/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="text-foreground text-lg ml-0.5">▶</span>
+                    <img src={v.thumbnail} alt={v.title} className="w-full h-48 object-cover" loading="lazy" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="h-12 w-12 rounded-full bg-destructive flex items-center justify-center shadow-lg">
+                        <span className="text-destructive-foreground text-lg ml-0.5">▶</span>
                       </div>
                     </div>
                   </div>
