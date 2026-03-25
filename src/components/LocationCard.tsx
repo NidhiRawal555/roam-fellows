@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Location } from "@/data/locations";
-import { MapPin, Users, Globe } from "lucide-react";
+import { Users, Globe, ChevronRight } from "lucide-react";
 
 interface LocationCardProps {
   location: Location;
@@ -18,17 +18,14 @@ export function LocationCard({ location }: LocationCardProps) {
             loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
+          <div className="absolute top-3 right-3 text-2xl">{location.flag}</div>
           <div className="absolute bottom-3 left-3 right-3">
             <h3 className="font-display text-xl font-bold text-card">{location.city}</h3>
-            <p className="flex items-center gap-1 text-sm text-card/80">
-              <MapPin className="h-3 w-3" />
-              {location.country}
-            </p>
+            <p className="text-sm text-card/80">{location.country}</p>
           </div>
         </div>
         <div className="p-4">
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{location.description}</p>
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
             <span className="flex items-center gap-1">
               <Users className="h-3 w-3" />
               {location.population}
@@ -37,6 +34,9 @@ export function LocationCard({ location }: LocationCardProps) {
               <Globe className="h-3 w-3" />
               {location.language.split(",")[0]}
             </span>
+          </div>
+          <div className="flex items-center justify-center gap-1 rounded-lg border border-border py-2 text-sm text-muted-foreground group-hover:text-foreground group-hover:border-primary/30 transition-colors">
+            Explore <ChevronRight className="h-4 w-4" />
           </div>
         </div>
       </div>

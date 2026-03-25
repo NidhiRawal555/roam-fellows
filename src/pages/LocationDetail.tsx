@@ -34,20 +34,29 @@ export default function LocationDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero */}
-      <div className="relative h-72 md:h-96">
-        <img src={location.image} alt={location.city} className="h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent" />
-        <div className="absolute top-4 left-4">
-          <Link to="/" className="flex items-center gap-1 rounded-full bg-card/80 backdrop-blur-sm px-3 py-1.5 text-sm text-foreground hover:bg-card transition-colors">
+      {/* Top Bar */}
+      <div className="sticky top-0 z-20 bg-card border-b border-border px-4 py-3">
+        <div className="container mx-auto max-w-4xl flex items-center gap-4">
+          <Link to="/" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" /> Back
           </Link>
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">{location.flag}</span>
+            <div>
+              <h1 className="text-lg font-bold text-foreground leading-tight">{location.city}</h1>
+              <p className="text-sm text-primary">{location.country}</p>
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Hero */}
+      <div className="relative h-56 md:h-72">
+        <img src={location.image} alt={location.city} className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/30 to-transparent" />
         <div className="absolute bottom-6 left-6 right-6">
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-card mb-1">{location.city}</h1>
-          <p className="flex items-center gap-1 text-card/80">
-            <MapPin className="h-4 w-4" /> {location.country}
-          </p>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-card mb-2">{location.city}</h2>
+          <p className="text-card/90 text-sm md:text-base leading-relaxed max-w-2xl">{location.description}</p>
         </div>
       </div>
 
@@ -55,16 +64,15 @@ export default function LocationDetail() {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="w-full justify-start overflow-x-auto mb-6 bg-muted">
-            <TabsTrigger value="overview">📍 Overview</TabsTrigger>
-            <TabsTrigger value="food">🍴 Food</TabsTrigger>
-            <TabsTrigger value="culture">🏛️ Culture</TabsTrigger>
-            <TabsTrigger value="currency">💱 Currency</TabsTrigger>
-            <TabsTrigger value="videos">📺 Videos</TabsTrigger>
-            <TabsTrigger value="chat">💬 Chat</TabsTrigger>
+            <TabsTrigger value="overview" className="gap-1.5">⊕ Overview</TabsTrigger>
+            <TabsTrigger value="food" className="gap-1.5">🍴 Food</TabsTrigger>
+            <TabsTrigger value="culture" className="gap-1.5">🏛️ Culture</TabsTrigger>
+            <TabsTrigger value="currency" className="gap-1.5">$ Currency</TabsTrigger>
+            <TabsTrigger value="videos" className="gap-1.5">▶ Videos</TabsTrigger>
+            <TabsTrigger value="chat" className="gap-1.5">💬 Chat</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            <p className="text-muted-foreground leading-relaxed">{location.description}</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { icon: Users, label: "Population", value: location.population },
@@ -129,11 +137,20 @@ export default function LocationDetail() {
           </TabsContent>
 
           <TabsContent value="currency" className="space-y-6">
-            <div className="rounded-xl border border-border bg-card p-5">
-              <p className="text-sm text-muted-foreground">Local Currency</p>
-              <p className="text-2xl font-bold text-foreground">{location.currencySymbol} {location.currency} ({location.currencyCode})</p>
-            </div>
             <CurrencyConverter defaultCurrency={location.currencyCode} />
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h3 className="font-semibold text-foreground mb-4">About {location.currencyCode}</h3>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Currency Symbol</p>
+                  <p className="text-2xl font-bold text-foreground">{location.currencySymbol}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm text-muted-foreground">Currency Code</p>
+                  <p className="text-2xl font-bold text-foreground">{location.currencyCode}</p>
+                </div>
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="videos">
