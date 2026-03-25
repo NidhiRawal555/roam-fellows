@@ -156,7 +156,6 @@ export default function LocationDetail() {
           </TabsContent>
 
           <TabsContent value="videos">
-            <h2 className="font-display text-2xl font-bold text-foreground mb-4">Travel Videos</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {location.videos.map((v) => (
                 <a
@@ -167,10 +166,10 @@ export default function LocationDetail() {
                   className="group rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow"
                 >
                   <div className="relative">
-                    <img src={v.thumbnail} alt={v.title} className="w-full h-36 object-cover" loading="lazy" />
-                    <div className="absolute inset-0 flex items-center justify-center bg-foreground/0 group-hover:bg-foreground/20 transition-colors">
-                      <div className="h-10 w-10 rounded-full bg-card/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="text-foreground text-lg ml-0.5">▶</span>
+                    <img src={v.thumbnail} alt={v.title} className="w-full h-48 object-cover" loading="lazy" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="h-12 w-12 rounded-full bg-destructive flex items-center justify-center shadow-lg">
+                        <span className="text-destructive-foreground text-lg ml-0.5">▶</span>
                       </div>
                     </div>
                   </div>
