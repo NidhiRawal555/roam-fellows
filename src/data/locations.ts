@@ -28,6 +28,7 @@ export interface Location {
   id: string;
   city: string;
   country: string;
+  flag: string;
   image: string;
   description: string;
   population: string;
@@ -52,7 +53,8 @@ export const locations: Location[] = [
   {
     id: "new-york",
     city: "New York",
-    country: "United States",
+    country: "USA",
+    flag: "🇺🇸",
     image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80",
     description: "The city that never sleeps — a melting pot of cultures, iconic skylines, world-class museums, and legendary food scenes from pizza to fine dining.",
     population: "8.3M",
@@ -96,7 +98,8 @@ export const locations: Location[] = [
   {
     id: "london",
     city: "London",
-    country: "United Kingdom",
+    country: "UK",
+    flag: "🇬🇧",
     image: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80",
     description: "A historic capital blending royal heritage, cutting-edge art, and diverse neighborhoods — from Buckingham Palace to Camden Market.",
     population: "9.0M",
@@ -141,6 +144,7 @@ export const locations: Location[] = [
     id: "paris",
     city: "Paris",
     country: "France",
+    flag: "🇫🇷",
     image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80",
     description: "The City of Light — world capital of art, fashion, gastronomy, and romance. Every arrondissement tells a different story.",
     population: "2.2M",
@@ -185,6 +189,7 @@ export const locations: Location[] = [
     id: "tokyo",
     city: "Tokyo",
     country: "Japan",
+    flag: "🇯🇵",
     image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80",
     description: "A dazzling fusion of ultra-modern technology and ancient traditions — neon-lit streets, serene temples, and the world's best food.",
     population: "14M",
@@ -229,6 +234,7 @@ export const locations: Location[] = [
     id: "mumbai",
     city: "Mumbai",
     country: "India",
+    flag: "🇮🇳",
     image: "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=800&q=80",
     description: "India's City of Dreams — Bollywood glamour, colonial architecture, bustling street markets, and the most incredible street food on Earth.",
     population: "20.7M",
@@ -273,6 +279,7 @@ export const locations: Location[] = [
     id: "sydney",
     city: "Sydney",
     country: "Australia",
+    flag: "🇦🇺",
     image: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&q=80",
     description: "Sun-drenched harbor city with iconic architecture, world-class beaches, and a laid-back lifestyle that's hard to beat.",
     population: "5.3M",
@@ -317,6 +324,7 @@ export const locations: Location[] = [
     id: "sao-paulo",
     city: "São Paulo",
     country: "Brazil",
+    flag: "🇧🇷",
     image: "https://images.unsplash.com/photo-1543059080-f9b1272213d5?w=800&q=80",
     description: "South America's largest city — a cultural powerhouse with incredible food, vibrant nightlife, and world-class street art.",
     population: "12.3M",
@@ -361,6 +369,7 @@ export const locations: Location[] = [
     id: "berlin",
     city: "Berlin",
     country: "Germany",
+    flag: "🇩🇪",
     image: "https://images.unsplash.com/photo-1560969184-10fe8719e047?w=800&q=80",
     description: "Europe's creative capital — raw, edgy, and endlessly reinventing itself. History, techno, street art, and currywurst.",
     population: "3.7M",
