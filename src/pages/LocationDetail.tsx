@@ -73,19 +73,21 @@ export default function LocationDetail() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { icon: Users, label: "Population", value: location.population },
-                { icon: Globe, label: "Language", value: location.language },
-                { icon: Clock, label: "Timezone", value: location.timezone },
-                { icon: MapPin, label: "Currency", value: `${location.currencySymbol} ${location.currencyCode}` },
-              ].map((stat) => (
-                <div key={stat.label} className="rounded-xl border border-border bg-card p-4">
-                  <stat.icon className="h-4 w-4 text-primary mb-2" />
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
-                  <p className="text-sm font-semibold text-foreground">{stat.value}</p>
-                </div>
-              ))}
+            <div className="rounded-xl border border-border bg-card p-6">
+              <h3 className="font-semibold text-foreground mb-4">Quick Facts</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {[
+                  { label: "Population", value: location.population },
+                  { label: "Language", value: location.language },
+                  { label: "Currency", value: location.currencyCode },
+                  { label: "Timezone", value: location.timezone },
+                ].map((stat) => (
+                  <div key={stat.label}>
+                    <p className="text-sm text-muted-foreground">{stat.label}</p>
+                    <p className="text-base font-semibold text-foreground mt-0.5">{stat.value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </TabsContent>
 
