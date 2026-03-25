@@ -61,7 +61,7 @@ export default function LocationDetail() {
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="px-4 py-8">
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="w-full justify-start overflow-x-auto mb-6 bg-muted">
             <TabsTrigger value="overview" className="gap-1.5">⊕ Overview</TabsTrigger>
