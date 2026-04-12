@@ -1,13 +1,34 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { locations } from "@/data/locations";
 import { LocationCard } from "@/components/LocationCard";
 import { SearchBar } from "@/components/SearchBar";
 import { FloatingChat } from "@/components/FloatingChat";
-import { Compass, User } from "lucide-react";
+import { Compass, User, LogOut } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Index() {
   const [search, setSearch] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const stored = localStorage.getItem("atlashub_user");
+    if (stored) {
+      const user = JSON.parse(stored);
+      setIsLoggedIn(true);
+      setUsername(user.username || user.email?.split("@")[0] || "User");
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("atlashub_user");
+    setIsLoggedIn(false);
+    setUsername("");
+    toast({ title: "Logged out successfully" });
+  };
 
   const filtered = locations.filter(
     (l) =>
@@ -17,7 +38,6 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-40">
         <div className="container mx-auto flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
@@ -30,14 +50,32 @@ export default function Index() {
               <span className="h-2 w-2 rounded-full bg-accent" />
               12 destinations
             </div>
-            <Link to="/auth" className="flex items-center justify-center h-9 w-9 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-              <User className="h-4 w-4" />
-            </Link>
+            {isLoggedIn ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-2 h-9 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors px-3"
+                >
+                  <User className="h-4 w-4" />
+                  <span className="text-sm font-medium hidden sm:inline">{username}</span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center justify-center h-9 w-9 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                  title="Logout"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </div>
+            ) : (
+              <Link to="/auth" className="flex items-center justify-center h-9 w-9 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+                <User className="h-4 w-4" />
+              </Link>
+            )}
           </div>
         </div>
       </header>
 
-      {/* Hero */}
       <section className="container mx-auto px-4 pt-12 pb-8 text-center">
         <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-3">
           Discover the World
@@ -47,7 +85,6 @@ export default function Index() {
         </p>
       </section>
 
-      {/* Grid */}
       <main className="container mx-auto px-4 pb-20">
         {filtered.length === 0 ? (
           <p className="text-center text-muted-foreground py-20">No destinations found for "{search}"</p>
