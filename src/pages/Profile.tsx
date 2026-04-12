@@ -19,6 +19,7 @@ interface MockUser {
 const DEFAULT_USER: MockUser = {
   email: "traveler@atlashub.com",
   username: "WorldExplorer",
+  avatar: "",
   bio: "Passionate about discovering new cultures and cuisines around the world.",
   favoriteLocations: ["tokyo", "paris", "istanbul"],
 };
