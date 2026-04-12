@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { locations } from "@/data/locations";
 import { LocationCard } from "@/components/LocationCard";
 import { SearchBar } from "@/components/SearchBar";
 import { FloatingChat } from "@/components/FloatingChat";
-import { Compass } from "lucide-react";
+import { Compass, User } from "lucide-react";
 
 export default function Index() {
   const [search, setSearch] = useState("");
@@ -24,9 +25,14 @@ export default function Index() {
             <span className="font-display text-xl font-bold text-foreground">AtlasHub</span>
           </div>
           <SearchBar value={search} onChange={setSearch} />
-          <div className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground">
-            <span className="h-2 w-2 rounded-full bg-accent" />
-            12 destinations
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground">
+              <span className="h-2 w-2 rounded-full bg-accent" />
+              12 destinations
+            </div>
+            <Link to="/auth" className="flex items-center justify-center h-9 w-9 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+              <User className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </header>
