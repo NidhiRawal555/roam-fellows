@@ -4,8 +4,10 @@ import { locations } from "@/data/locations";
 import { LocationCard } from "@/components/LocationCard";
 import { SearchBar } from "@/components/SearchBar";
 import { FloatingChat } from "@/components/FloatingChat";
-import { Compass, User, LogOut, Users } from "lucide-react";
+import { Compass, User, LogOut, Users, MessageCircle, Newspaper } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useMessages } from "@/hooks/use-messages";
+import { useCurrentUser } from "@/hooks/use-user-data";
 
 export default function Index() {
   const [search, setSearch] = useState("");
@@ -13,13 +15,15 @@ export default function Index() {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useCurrentUser();
+  const { totalUnread } = useMessages(user?.id);
 
   useEffect(() => {
     const stored = localStorage.getItem("atlashub_user");
     if (stored) {
-      const user = JSON.parse(stored);
+      const u = JSON.parse(stored);
       setIsLoggedIn(true);
-      setUsername(user.username || user.email?.split("@")[0] || "User");
+      setUsername(u.username || u.email?.split("@")[0] || "User");
     }
   }, []);
 
@@ -47,11 +51,28 @@ export default function Index() {
           <SearchBar value={search} onChange={setSearch} />
           <div className="flex items-center gap-3">
             <Link
+              to="/feed"
+              className="flex items-center gap-1.5 h-9 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors px-3 text-sm font-medium"
+            >
+              <Newspaper className="h-4 w-4" />
+              <span className="hidden sm:inline">Feed</span>
+            </Link>
+            <Link
               to="/connect"
               className="flex items-center gap-1.5 h-9 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors px-3 text-sm font-medium"
             >
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">Connect</span>
+            </Link>
+            <Link
+              to="/inbox"
+              className="relative flex items-center justify-center h-9 w-9 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+              title="Inbox"
+            >
+              <MessageCircle className="h-4 w-4" />
+              {totalUnread > 0 && (
+                <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-[10px] rounded-full h-4 min-w-[16px] flex items-center justify-center px-1">{totalUnread}</span>
+              )}
             </Link>
             {isLoggedIn ? (
               <div className="flex items-center gap-2">

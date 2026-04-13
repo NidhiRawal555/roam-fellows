@@ -9,6 +9,8 @@ import Auth from "./pages/Auth.tsx";
 import Profile from "./pages/Profile.tsx";
 import Connect from "./pages/Connect.tsx";
 import PublicProfile from "./pages/PublicProfile.tsx";
+import Inbox from "./pages/Inbox.tsx";
+import Feed from "./pages/Feed.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -26,6 +28,8 @@ const App = () => (
           <Route path="/profile" element={<Profile />} />
           <Route path="/connect" element={<Connect />} />
           <Route path="/user/:userId" element={<PublicProfile />} />
+          <Route path="/inbox" element={<Inbox />} />
+          <Route path="/feed" element={<Feed />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
