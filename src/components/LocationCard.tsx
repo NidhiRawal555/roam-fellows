@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Location } from "@/data/locations";
-import { Users, Globe, ChevronRight, Eye, EyeOff, X } from "lucide-react";
+import { Users, Globe, ChevronRight, Eye, EyeOff, X, Heart, Plane } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useCurrentUser } from "@/hooks/use-user-data";
 
 interface LocationCardProps {
   location: Location;
@@ -20,8 +21,11 @@ export function LocationCard({ location }: LocationCardProps) {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, toggleFavorite, toggleVisited } = useCurrentUser();
 
-  const isLoggedIn = !!localStorage.getItem("atlashub_user");
+  const isLoggedIn = !!user;
+  const isFavorite = user?.favoriteLocations.includes(location.id) ?? false;
+  const isVisited = user?.visitedLocations.includes(location.id) ?? false;
 
   const handleCardClick = () => {
     if (isLoggedIn) {
@@ -33,11 +37,35 @@ export function LocationCard({ location }: LocationCardProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const user = { email, username: username || email.split("@")[0], avatar: "", bio: "", favoriteLocations: [] };
-    localStorage.setItem("atlashub_user", JSON.stringify(user));
+    const newUser = {
+      id: "current-user",
+      email,
+      username: username || email.split("@")[0],
+      avatar: "",
+      bio: "",
+      favoriteLocations: [],
+      visitedLocations: [],
+      travelPhotos: [],
+      hiddenGems: [],
+    };
+    localStorage.setItem("atlashub_user", JSON.stringify(newUser));
     toast({ title: isLogin ? "Welcome back!" : "Account created!", description: `Exploring ${location.city}...` });
     setShowAuth(false);
     navigate(`/location/${location.id}`);
+  };
+
+  const handleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isLoggedIn) { setShowAuth(true); return; }
+    toggleFavorite(location.id);
+    toast({ title: isFavorite ? "Removed from favorites" : `❤️ ${location.city} added to favorites!` });
+  };
+
+  const handleVisited = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isLoggedIn) { setShowAuth(true); return; }
+    toggleVisited(location.id);
+    toast({ title: isVisited ? "Removed from visited" : `✈️ ${location.city} marked as visited!` });
   };
 
   return (
@@ -52,7 +80,27 @@ export function LocationCard({ location }: LocationCardProps) {
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
-            <div className="absolute top-3 right-3 text-2xl">{location.flag}</div>
+            <div className="absolute top-3 right-3 flex items-center gap-1.5">
+              <button
+                onClick={handleFavorite}
+                className={`flex items-center justify-center h-8 w-8 rounded-full backdrop-blur-sm transition-colors ${
+                  isFavorite ? "bg-destructive/90 text-destructive-foreground" : "bg-card/30 text-card hover:bg-card/50"
+                }`}
+                title="Like"
+              >
+                <Heart className={`h-4 w-4 ${isFavorite ? "fill-current" : ""}`} />
+              </button>
+              <button
+                onClick={handleVisited}
+                className={`flex items-center justify-center h-8 w-8 rounded-full backdrop-blur-sm transition-colors ${
+                  isVisited ? "bg-primary/90 text-primary-foreground" : "bg-card/30 text-card hover:bg-card/50"
+                }`}
+                title="Mark as visited"
+              >
+                <Plane className={`h-4 w-4 ${isVisited ? "fill-current" : ""}`} />
+              </button>
+            </div>
+            <div className="absolute top-3 left-3 text-2xl">{location.flag}</div>
             <div className="absolute bottom-3 left-3 right-3">
               <h3 className="font-display text-xl font-bold text-card">{location.city}</h3>
               <p className="text-sm text-card/80">{location.country}</p>
@@ -76,7 +124,6 @@ export function LocationCard({ location }: LocationCardProps) {
         </div>
       </div>
 
-      {/* Auth Popup */}
       {showAuth && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50 backdrop-blur-sm" onClick={() => setShowAuth(false)}>
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-sm mx-4 rounded-xl border border-border bg-card p-6 shadow-xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
@@ -89,7 +136,6 @@ export function LocationCard({ location }: LocationCardProps) {
                 <X className="h-5 w-5" />
               </button>
             </div>
-
             <form onSubmit={handleSubmit} className="space-y-3">
               {!isLogin && (
                 <div className="space-y-1.5">
@@ -119,7 +165,6 @@ export function LocationCard({ location }: LocationCardProps) {
               </div>
               <Button type="submit" className="w-full">{isLogin ? "Sign In" : "Create Account"}</Button>
             </form>
-
             <p className="text-center text-xs text-muted-foreground">
               {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
               <button onClick={() => setIsLogin(!isLogin)} className="text-primary hover:underline font-medium">
