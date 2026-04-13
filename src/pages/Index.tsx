@@ -4,7 +4,7 @@ import { locations } from "@/data/locations";
 import { LocationCard } from "@/components/LocationCard";
 import { SearchBar } from "@/components/SearchBar";
 import { FloatingChat } from "@/components/FloatingChat";
-import { Compass, User, LogOut } from "lucide-react";
+import { Compass, User, LogOut, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Index() {
@@ -46,10 +46,13 @@ export default function Index() {
           </div>
           <SearchBar value={search} onChange={setSearch} />
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-accent" />
-              12 destinations
-            </div>
+            <Link
+              to="/connect"
+              className="flex items-center gap-1.5 h-9 rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors px-3 text-sm font-medium"
+            >
+              <Users className="h-4 w-4" />
+              <span className="hidden sm:inline">Connect</span>
+            </Link>
             {isLoggedIn ? (
               <div className="flex items-center gap-2">
                 <Link
