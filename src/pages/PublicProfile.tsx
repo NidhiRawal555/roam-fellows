@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
-import { Compass, ArrowLeft, MapPin, Heart, Plane, Camera, MapPinned } from "lucide-react";
+import { Compass, ArrowLeft, MapPin, Heart, Plane, Camera, MapPinned, MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { locations } from "@/data/locations";
 import { getUserById } from "@/hooks/use-user-data";
@@ -46,7 +47,7 @@ export default function PublicProfile() {
             <Avatar className="h-16 w-16 text-lg">
               <AvatarFallback className="bg-primary/10 text-primary font-bold">{initials}</AvatarFallback>
             </Avatar>
-            <div>
+            <div className="flex-1">
               <h1 className="text-xl font-bold text-foreground">{user.username}</h1>
               <p className="text-sm text-muted-foreground mt-1">{user.bio}</p>
               <div className="flex gap-4 mt-3 text-xs text-muted-foreground">
@@ -54,6 +55,11 @@ export default function PublicProfile() {
                 <span className="flex items-center gap-1"><Plane className="h-3 w-3 text-primary" /> {visitedLocs.length} visited</span>
                 <span className="flex items-center gap-1"><Camera className="h-3 w-3 text-accent" /> {user.travelPhotos.length} photos</span>
               </div>
+              <Link to={`/inbox?chat=${user.id}`}>
+                <Button size="sm" variant="outline" className="mt-3 gap-1.5">
+                  <MessageCircle className="h-3.5 w-3.5" /> Message
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
