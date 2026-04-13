@@ -7,6 +7,8 @@ import Index from "./pages/Index.tsx";
 import LocationDetail from "./pages/LocationDetail.tsx";
 import Auth from "./pages/Auth.tsx";
 import Profile from "./pages/Profile.tsx";
+import Connect from "./pages/Connect.tsx";
+import PublicProfile from "./pages/PublicProfile.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -22,6 +24,8 @@ const App = () => (
           <Route path="/location/:id" element={<LocationDetail />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/connect" element={<Connect />} />
+          <Route path="/user/:userId" element={<PublicProfile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
