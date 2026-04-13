@@ -6,7 +6,7 @@ interface CurrencyConverterProps {
 }
 
 const currencies = Object.keys(exchangeRates);
-
+// nidhi here 
 export function CurrencyConverter({ defaultCurrency }: CurrencyConverterProps) {
   const [amount, setAmount] = useState("100");
   const [from, setFrom] = useState("USD");
