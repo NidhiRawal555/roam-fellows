@@ -8,6 +8,7 @@ import { Compass, User, LogOut, Users, MessageCircle, Newspaper } from "lucide-r
 import { useToast } from "@/hooks/use-toast";
 import { useMessages } from "@/hooks/use-messages";
 import { useCurrentUser } from "@/hooks/use-user-data";
+import { clearCurrentUser, getCurrentUser } from "@/lib/session";
 
 export default function Index() {
   const [search, setSearch] = useState("");
@@ -19,19 +20,21 @@ export default function Index() {
   const { totalUnread } = useMessages(user?.id);
 
   useEffect(() => {
-    const stored = localStorage.getItem("atlashub_user");
-    if (stored) {
-      const u = JSON.parse(stored);
-      setIsLoggedIn(true);
-      setUsername(u.username || u.email?.split("@")[0] || "User");
-    }
-  }, []);
+    const sync = () => {
+      const u = getCurrentUser();
+      setIsLoggedIn(!!u);
+      setUsername(u?.username || u?.email?.split("@")[0] || "");
+    };
+    sync();
+    window.addEventListener("atlashub:user-changed", sync);
+    return () => window.removeEventListener("atlashub:user-changed", sync);
+  }, [user]);
 
   const handleLogout = () => {
-    localStorage.removeItem("atlashub_user");
+    clearCurrentUser();
     setIsLoggedIn(false);
     setUsername("");
-    toast({ title: "Logged out successfully" });
+    toast({ title: "Logged out successfully (this tab)" });
   };
 
   const filtered = locations.filter(

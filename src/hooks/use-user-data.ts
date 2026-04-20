@@ -28,8 +28,13 @@ export interface HiddenGem {
   photoUrl?: string;
 }
 
-const CURRENT_USER_KEY = "atlashub_user";
-const ALL_USERS_KEY = "atlashub_all_users";
+import {
+  CURRENT_USER_KEY,
+  ALL_USERS_KEY,
+  getCurrentUser,
+  setCurrentUser as sessionSetCurrentUser,
+  upsertUserInDirectory,
+} from "@/lib/session";
 
 function generateId() {
   return Math.random().toString(36).substring(2, 10);
@@ -111,44 +116,36 @@ export function useCurrentUser() {
   const [user, setUser] = useState<UserProfile | null>(null);
 
   const load = useCallback(() => {
-    try {
-      const stored = localStorage.getItem(CURRENT_USER_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setUser({
-          id: parsed.id || "current-user",
-          email: parsed.email || "",
-          username: parsed.username || "",
-          avatar: parsed.avatar || "",
-          bio: parsed.bio || "",
-          favoriteLocations: parsed.favoriteLocations || [],
-          visitedLocations: parsed.visitedLocations || [],
-          travelPhotos: parsed.travelPhotos || [],
-          hiddenGems: parsed.hiddenGems || [],
-        });
-      } else {
-        setUser(null);
-      }
-    } catch {
-      setUser(null);
-    }
+    setUser(getCurrentUser());
   }, []);
 
   useEffect(() => {
     load();
     const handler = () => load();
+    // Same-tab session changes
+    window.addEventListener("atlashub:user-changed", handler);
+    // Cross-tab directory updates (e.g. another tab updated this user's profile)
     window.addEventListener("storage", handler);
-    return () => window.removeEventListener("storage", handler);
+    return () => {
+      window.removeEventListener("atlashub:user-changed", handler);
+      window.removeEventListener("storage", handler);
+    };
   }, [load]);
+
+  const persist = useCallback((updated: UserProfile) => {
+    sessionStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updated));
+    upsertUserInDirectory(updated);
+    setUser(updated);
+  }, []);
 
   const update = useCallback((partial: Partial<UserProfile>) => {
     setUser((prev) => {
       if (!prev) return prev;
       const updated = { ...prev, ...partial };
-      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updated));
+      persist(updated);
       return updated;
     });
-  }, []);
+  }, [persist]);
 
   const toggleFavorite = useCallback((locationId: string) => {
     setUser((prev) => {
@@ -157,10 +154,10 @@ export function useCurrentUser() {
         ? prev.favoriteLocations.filter((id) => id !== locationId)
         : [...prev.favoriteLocations, locationId];
       const updated = { ...prev, favoriteLocations: favs };
-      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updated));
+      persist(updated);
       return updated;
     });
-  }, []);
+  }, [persist]);
 
   const toggleVisited = useCallback((locationId: string) => {
     setUser((prev) => {
@@ -169,30 +166,30 @@ export function useCurrentUser() {
         ? prev.visitedLocations.filter((id) => id !== locationId)
         : [...prev.visitedLocations, locationId];
       const updated = { ...prev, visitedLocations: visited };
-      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updated));
+      persist(updated);
       return updated;
     });
-  }, []);
+  }, [persist]);
 
   const addPhoto = useCallback((photo: Omit<TravelPhoto, "id" | "uploadedAt">) => {
     setUser((prev) => {
       if (!prev) return prev;
       const newPhoto: TravelPhoto = { ...photo, id: generateId(), uploadedAt: new Date().toISOString().split("T")[0] };
       const updated = { ...prev, travelPhotos: [...prev.travelPhotos, newPhoto] };
-      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updated));
+      persist(updated);
       return updated;
     });
-  }, []);
+  }, [persist]);
 
   const addHiddenGem = useCallback((gem: Omit<HiddenGem, "id">) => {
     setUser((prev) => {
       if (!prev) return prev;
       const newGem: HiddenGem = { ...gem, id: generateId() };
       const updated = { ...prev, hiddenGems: [...prev.hiddenGems, newGem] };
-      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updated));
+      persist(updated);
       return updated;
     });
-  }, []);
+  }, [persist]);
 
   return { user, update, toggleFavorite, toggleVisited, addPhoto, addHiddenGem, reload: load };
 }

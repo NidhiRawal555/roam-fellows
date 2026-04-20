@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { signInOrSignUp } from "@/lib/session";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -17,10 +18,9 @@ export default function Auth() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock auth — store in localStorage
-    const user = { email, username: username || email.split("@")[0], avatar: "" };
-    localStorage.setItem("atlashub_user", JSON.stringify(user));
-    toast({ title: isLogin ? "Welcome back!" : "Account created!", description: "You are now logged in." });
+    // Per-tab session: each browser tab can be signed in as a different user.
+    signInOrSignUp({ email, username });
+    toast({ title: isLogin ? "Welcome back!" : "Account created!", description: "You are now logged in (this tab only)." });
     navigate("/profile");
   };
 

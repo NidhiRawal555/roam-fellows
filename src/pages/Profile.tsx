@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { locations } from "@/data/locations";
 import { useToast } from "@/hooks/use-toast";
 import { useCurrentUser } from "@/hooks/use-user-data";
+import { clearCurrentUser } from "@/lib/session";
 
 export default function Profile() {
   const { user, update, addPhoto, addHiddenGem } = useCurrentUser();
@@ -42,8 +43,8 @@ export default function Profile() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("atlashub_user");
-    toast({ title: "Logged out" });
+    clearCurrentUser();
+    toast({ title: "Logged out (this tab)" });
     navigate("/auth");
   };
 
