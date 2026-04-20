@@ -10,6 +10,8 @@ export interface UserProfile {
   visitedLocations: string[];
   travelPhotos: TravelPhoto[];
   hiddenGems: HiddenGem[];
+  homeCity?: string;       // e.g. "Lisbon, Portugal"
+  homeCountryCode?: string; // ISO alpha-2
 }
 
 export interface TravelPhoto {

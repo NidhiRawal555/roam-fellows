@@ -9,6 +9,7 @@ import { locations } from "@/data/locations";
 import { useCurrentUser, getAllUsers } from "@/hooks/use-user-data";
 import { usePosts } from "@/hooks/use-posts";
 import { useToast } from "@/hooks/use-toast";
+import { NotificationBell } from "@/components/NotificationBell";
 
 export default function Feed() {
   const { user } = useCurrentUser();
@@ -70,11 +71,14 @@ export default function Feed() {
               <span className="font-display text-xl font-bold text-foreground">Feed</span>
             </div>
           </div>
-          {user && (
-            <Button size="sm" onClick={() => setShowCompose(!showCompose)} className="gap-1.5">
-              <Plus className="h-3.5 w-3.5" /> Post
-            </Button>
-          )}
+          <div className="flex items-center gap-1">
+            {user && <NotificationBell />}
+            {user && (
+              <Button size="sm" onClick={() => setShowCompose(!showCompose)} className="gap-1.5">
+                <Plus className="h-3.5 w-3.5" /> Post
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 
