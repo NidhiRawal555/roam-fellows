@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useCurrentUser } from "@/hooks/use-user-data";
+import { signInOrSignUp } from "@/lib/session";
 
 interface LocationCardProps {
   location: Location;
@@ -37,18 +38,7 @@ export function LocationCard({ location }: LocationCardProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newUser = {
-      id: "current-user",
-      email,
-      username: username || email.split("@")[0],
-      avatar: "",
-      bio: "",
-      favoriteLocations: [],
-      visitedLocations: [],
-      travelPhotos: [],
-      hiddenGems: [],
-    };
-    localStorage.setItem("atlashub_user", JSON.stringify(newUser));
+    signInOrSignUp({ email, username });
     toast({ title: isLogin ? "Welcome back!" : "Account created!", description: `Exploring ${location.city}...` });
     setShowAuth(false);
     navigate(`/location/${location.id}`);
