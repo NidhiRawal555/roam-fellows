@@ -9,6 +9,8 @@ import { locations } from "@/data/locations";
 import { useToast } from "@/hooks/use-toast";
 import { useCurrentUser } from "@/hooks/use-user-data";
 import { clearCurrentUser } from "@/lib/session";
+import { NotificationBell } from "@/components/NotificationBell";
+import { CitySearch } from "@/components/CitySearch";
 
 export default function Profile() {
   const { user, update, addPhoto, addHiddenGem } = useCurrentUser();
@@ -79,9 +81,12 @@ export default function Profile() {
               <span className="font-display text-xl font-bold text-foreground">AtlasHub</span>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground gap-1.5">
-            <LogOut className="h-4 w-4" /> Logout
-          </Button>
+          <div className="flex items-center gap-1">
+            <NotificationBell />
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground gap-1.5">
+              <LogOut className="h-4 w-4" /> Logout
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -118,9 +123,32 @@ export default function Profile() {
                   </div>
                   <p className="text-sm text-muted-foreground">{user.email}</p>
                   {user.bio && <p className="text-sm text-muted-foreground mt-2">{user.bio}</p>}
+                  {user.homeCity && (
+                    <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                      <MapPin className="h-3 w-3" /> {user.homeCity}
+                    </p>
+                  )}
                 </>
               )}
             </div>
+          </div>
+
+          {/* Home city — powered by Open-Meteo Geocoding (free, no key) */}
+          <div className="mt-5 pt-5 border-t border-border space-y-1.5">
+            <Label className="text-xs flex items-center gap-1">
+              <MapPin className="h-3 w-3" /> Home city
+            </Label>
+            <CitySearch
+              value={user.homeCity || ""}
+              placeholder="Search any city in the world..."
+              onSelect={(city) => {
+                update({
+                  homeCity: `${city.name}, ${city.country}`,
+                  homeCountryCode: city.countryCode,
+                });
+                toast({ title: `📍 Home set to ${city.name}, ${city.country}` });
+              }}
+            />
           </div>
         </div>
 

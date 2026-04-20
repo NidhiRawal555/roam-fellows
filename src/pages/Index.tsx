@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useMessages } from "@/hooks/use-messages";
 import { useCurrentUser } from "@/hooks/use-user-data";
 import { clearCurrentUser, getCurrentUser } from "@/lib/session";
+import { NotificationBell } from "@/components/NotificationBell";
 
 export default function Index() {
   const [search, setSearch] = useState("");
@@ -79,6 +80,7 @@ export default function Index() {
             </Link>
             {isLoggedIn ? (
               <div className="flex items-center gap-2">
+                <NotificationBell />
                 <Link
                   to="/profile"
                   className="flex items-center gap-2 h-9 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors px-3"
