@@ -62,10 +62,39 @@ const MOCK_POSTS: Post[] = [
   },
 ];
 
+function normalizePost(p: any): Post | null {
+  if (!p || typeof p !== "object" || !p.id || !p.authorId) return null;
+  return {
+    id: String(p.id),
+    authorId: String(p.authorId),
+    text: typeof p.text === "string" ? p.text : "",
+    photoUrl: p.photoUrl || undefined,
+    locationId: p.locationId || undefined,
+    timestamp: p.timestamp || new Date().toISOString(),
+    likes: Array.isArray(p.likes) ? p.likes.filter((x: any) => typeof x === "string") : [],
+    comments: Array.isArray(p.comments)
+      ? p.comments
+          .filter((c: any) => c && c.id && c.authorId)
+          .map((c: any) => ({
+            id: String(c.id),
+            authorId: String(c.authorId),
+            text: typeof c.text === "string" ? c.text : "",
+            timestamp: c.timestamp || new Date().toISOString(),
+          }))
+      : [],
+  };
+}
+
 function loadPosts(): Post[] {
   try {
     const stored = localStorage.getItem(POSTS_KEY);
-    if (stored) return JSON.parse(stored);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        const normalized = parsed.map(normalizePost).filter((p): p is Post => p !== null);
+        if (normalized.length > 0) return normalized;
+      }
+    }
   } catch {}
   localStorage.setItem(POSTS_KEY, JSON.stringify(MOCK_POSTS));
   return MOCK_POSTS;
