@@ -96,12 +96,17 @@ const MOCK_USERS: UserProfile[] = [
 ];
 
 function loadAllUsers(): UserProfile[] {
+  let stored: UserProfile[] = [];
   try {
-    const stored = localStorage.getItem(ALL_USERS_KEY);
-    if (stored) return JSON.parse(stored);
+    const raw = localStorage.getItem(ALL_USERS_KEY);
+    if (raw) stored = JSON.parse(raw);
   } catch {}
-  localStorage.setItem(ALL_USERS_KEY, JSON.stringify(MOCK_USERS));
-  return MOCK_USERS;
+  // Ensure mock users are always present (merged by id).
+  const byId = new Map<string, UserProfile>();
+  [...MOCK_USERS, ...stored].forEach((u) => byId.set(u.id, u));
+  const merged = Array.from(byId.values());
+  localStorage.setItem(ALL_USERS_KEY, JSON.stringify(merged));
+  return merged;
 }
 
 export function getAllUsers(): UserProfile[] {
